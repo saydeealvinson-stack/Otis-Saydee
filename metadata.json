@@ -1,0 +1,7 @@
+{
+  "name": "Saydee Food",
+  "description": "A professional food business website featuring a digital menu, online ordering, and gallery.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

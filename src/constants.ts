@@ -1,0 +1,68 @@
+import { MenuItem } from './types';
+
+export const MENU_ITEMS: MenuItem[] = [
+  {
+    id: '1',
+    name: 'Crispy Calamari',
+    price: 12.99,
+    description: 'Fresh calamari rings, lightly battered and served with spicy marinara.',
+    category: 'Starters',
+    image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&q=80&w=800',
+  },
+  {
+    id: '2',
+    name: 'Bruschetta Pomodoro',
+    price: 8.50,
+    description: 'Toasted sourdough topped with vine-ripened tomatoes, garlic, and fresh basil.',
+    category: 'Starters',
+    image: 'https://images.unsplash.com/photo-1572656631137-7935297eff55?auto=format&fit=crop&q=80&w=800',
+  },
+  {
+    id: '3',
+    name: 'Grilled Ribeye Steak',
+    price: 34.99,
+    description: '12oz grass-fed ribeye, grilled to perfection, served with garlic herb butter.',
+    category: 'Main Dishes',
+    image: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&q=80&w=800',
+  },
+  {
+    id: '4',
+    name: 'Wild Mushroom Risotto',
+    price: 22.00,
+    description: 'Creamy Arborio rice with a medley of wild mushrooms and truffle oil.',
+    category: 'Main Dishes',
+    image: 'https://images.unsplash.com/photo-1476124369491-e7addf5db371?auto=format&fit=crop&q=80&w=800',
+  },
+  {
+    id: '5',
+    name: 'Classic Tiramisu',
+    price: 9.00,
+    description: 'Layers of espresso-soaked ladyfingers and mascarpone cream.',
+    category: 'Desserts',
+    image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&q=80&w=800',
+  },
+  {
+    id: '6',
+    name: 'Lava Cake',
+    price: 10.50,
+    description: 'Warm chocolate cake with a molten center, served with vanilla bean gelato.',
+    category: 'Desserts',
+    image: 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?auto=format&fit=crop&q=80&w=800',
+  },
+  {
+    id: '7',
+    name: 'Fresh Mint Lemonade',
+    price: 4.50,
+    description: 'House-made lemonade with fresh mint leaves and a hint of honey.',
+    category: 'Drinks',
+    image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&q=80&w=800',
+  },
+  {
+    id: '8',
+    name: 'Artisan Coffee',
+    price: 3.99,
+    description: 'Locally roasted beans, brewed to your preference.',
+    category: 'Drinks',
+    image: 'https://images.unsplash.com/photo-1541167760496-162955ed8a9f?auto=format&fit=crop&q=80&w=800',
+  },
+];

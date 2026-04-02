@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: menu
+    // Fields:
+    //   - name: string (required)
+    //   - price: number (required)
+    //   - description: string (optional)
+    //   - category: string (required, enum: Starters, Main Dishes, Drinks, Desserts)
+    //   - image: string (required, URL)
+    //   - createdAt: timestamp (optional)
+    //
+    // Collection: users
+    // Fields:
+    //   - uid: string (required)
+    //   - email: string (required)
+    //   - role: string (required, enum: admin, customer)
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "saydeealvinson@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidMenuItem(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.price is number && data.price >= 0 &&
+             data.category in ['Starters', 'Main Dishes', 'Drinks', 'Desserts'] &&
+             data.image is string && data.image.matches("^https?://.*") &&
+             (!('description' in data) || (data.description is string && data.description.size() < 500));
+    }
+
+    // Rules
+    match /menu/{itemId} {
+      allow read: if true; // Menu is public
+      allow write: if isAdmin() && isValidMenuItem(request.resource.data);
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow create: if isAuthenticated() && request.auth.uid == userId && request.resource.data.role == 'customer';
+      allow update: if isAdmin();
+    }
+  }
+}

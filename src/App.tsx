@@ -29,7 +29,8 @@ import {
   LogOut,
   Settings,
   Save,
-  Image as ImageIcon
+  Image as ImageIcon,
+  AlertCircle
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import { MENU_ITEMS as STATIC_MENU_ITEMS } from './constants';
@@ -1105,6 +1106,7 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState<{ message: string, type: 'error' | 'success' } | null>(null);
 
   // Auth Listener
   useEffect(() => {
@@ -1114,6 +1116,14 @@ export default function App() {
     });
     return () => unsubscribe();
   }, []);
+
+  // Clear notification after 5 seconds
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => setNotification(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
 
   // Firestore Menu Listener
   useEffect(() => {
@@ -1152,8 +1162,16 @@ export default function App() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-    } catch (error) {
+      setNotification({ message: "Welcome back!", type: 'success' });
+    } catch (error: any) {
       console.error("Login failed:", error);
+      if (error.code === 'auth/popup-closed-by-user') {
+        setNotification({ message: "Login was cancelled. Please try again.", type: 'error' });
+      } else if (error.code === 'auth/popup-blocked') {
+        setNotification({ message: "Login popup was blocked by your browser.", type: 'error' });
+      } else {
+        setNotification({ message: "An error occurred during login. Please try again.", type: 'error' });
+      }
     }
   };
 
@@ -1235,6 +1253,29 @@ export default function App() {
               onUpdateQuantity={updateQuantity}
               onRemoveItem={removeItem}
             />
+
+            {/* Notification Toast */}
+            <AnimatePresence>
+              {notification && (
+                <motion.div
+                  initial={{ opacity: 0, y: 50, x: '-50%' }}
+                  animate={{ opacity: 1, y: 0, x: '-50%' }}
+                  exit={{ opacity: 0, y: 50, x: '-50%' }}
+                  className={cn(
+                    "fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border",
+                    notification.type === 'error' 
+                      ? "bg-red-50 border-red-100 text-red-600" 
+                      : "bg-green-50 border-green-100 text-green-600"
+                  )}
+                >
+                  {notification.type === 'error' ? <AlertCircle size={20} /> : <Star size={20} className="fill-green-600" />}
+                  <span className="font-bold">{notification.message}</span>
+                  <button onClick={() => setNotification(null)} className="ml-2 hover:opacity-70">
+                    <X size={18} />
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </Router>
       )}
